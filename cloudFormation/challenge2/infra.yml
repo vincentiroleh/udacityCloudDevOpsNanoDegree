@@ -50,6 +50,7 @@ Resources:
     Properties:
       VpcId: !Ref myVPC
       CidrBlock: !Ref PublicSubnetCIDR
+      AvailabilityZone: 'us-east-1a'
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
@@ -60,6 +61,7 @@ Resources:
     Properties:
       VpcId: !Ref myVPC
       CidrBlock: !Ref PrivateSubnetCIDR
+      AvailabilityZone: 'us-east-1b'
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
@@ -70,11 +72,17 @@ Resources:
     DependsOn: AttachGateway
     Properties:
       Domain: vpc
+      Tags:
+        - Key: Name
+          Value: "Elastic IP for our NAT Gateway"
   NatGateway:
     Type: AWS::EC2::NatGateway
     Properties:
       AllocationId: !GetAtt NatGatewayEIP.AllocationId
       SubnetId: !Ref PublicSubnet
+      Tags:
+        - Key: Name
+          Value: "NAT to be used by servers in the private subnet"
 
   PrivateRouteTable:
     Type: AWS::EC2::RouteTable
@@ -92,18 +100,18 @@ Resources:
         - Key: Name
           Value: !Sub ${EnvironmentName} Public Route Table
   
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+
   PrivateSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PrivateSubnet
       RouteTableId: !Ref PrivateRouteTable
 
-  PublicSubnetRouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PublicSubnet
-      RouteTableId: !Ref PublicRouteTable
-    
   DefaultPublicRoute:
     Type: AWS::EC2::Route
     DependsOn: AttachGateway
@@ -117,4 +125,4 @@ Resources:
     Properties:
       RouteTableId: !Ref PrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref NatGateway
+      NatGatewayId: !Ref NatGateway
