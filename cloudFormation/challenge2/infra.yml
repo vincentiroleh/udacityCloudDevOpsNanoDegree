@@ -50,7 +50,6 @@ Resources:
     Properties:
       VpcId: !Ref myVPC
       CidrBlock: !Ref PublicSubnetCIDR
-      AvailabilityZone: 'us-east-1a'
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
@@ -61,7 +60,6 @@ Resources:
     Properties:
       VpcId: !Ref myVPC
       CidrBlock: !Ref PrivateSubnetCIDR
-      AvailabilityZone: 'us-east-1b'
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
