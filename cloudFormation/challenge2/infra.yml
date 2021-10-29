@@ -95,14 +95,14 @@ Resources:
   PrivateSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateRouteTable
-      RouteTableId: !Ref PrivateSubnet
+      SubnetId: !Ref PrivateSubnet
+      RouteTableId: !Ref PrivateRouteTable
 
   PublicSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PublicRouteTable
-      RouteTableId: !Ref PublicSubnet
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
     
   DefaultPublicRoute:
     Type: AWS::EC2::Route
