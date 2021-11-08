@@ -124,3 +124,19 @@ Resources:
       RouteTableId: !Ref PrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref NatGateway
+
+Outputs:
+  VPC:
+    Description: A reference to the created VPC
+    Value: !Ref myVPC
+    Export: 
+      Name: !Sub ${EnvironmentName}-VPCID
+  
+  PrivateSubnet:
+    Description: A reference to the private subnet
+    Value: !Ref PrivateSubnet
+    Export: 
+      Name: !Sub ${EnvironmentName}-PRI-SN
+
+
+    
