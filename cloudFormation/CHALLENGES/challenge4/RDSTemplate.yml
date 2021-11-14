@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This stack creates an RDS MySql 5.7 Instance
+
+Parameters: 
+  EnvironmentName:
+    Description: An environment name that will be prefixed to resource names
+    Type: String
+  myUsername:
+    Description: A username
+    Type: String
+  myPassword:
+    Description: A password with at least 8 characters
+    Type: String
+    
+Resources:
+  MyDBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: "Subnets to use for the DB"
+      DBSubnetGroupName: "Subnet Group"
+      SubnetIds:
+        - Fn::ImportValue: !Sub "${EnvironmentName}-PRI1-SN"
+        - Fn::ImportValue: !Sub "${EnvironmentName}-PRI2-SN"
+      Tags:
+        - 
+          Key: "Name"
+          Value: !Sub "${EnvironmentName} MS SQL RDS SubnetGroup"
+  
+  MyDB:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: "Retain"
+    Properties:
+      VPCSecurityGroups: [sg-05beb860f6d8ab1ea, sg-04e27efbc2b85453d]
+      PubliclyAccessible: false
+      MultiAZ: false
+      AllocatedStorage: 20
+      DBInstanceClass: db.t2.small
+      Engine: "mysql"
+      MasterUsername: !Sub "${myUsername}"
+      MasterUserPassword: !Sub "${myPassword}"
+      DBSubnetGroupName: !Ref MyDBSubnetGroup
+      Tags:
+        -           
+          Key: "Name"
+          Value: !Sub "${EnvironmentName} MS SQL RDS"
+
+Outputs:
+  InstanceId:
+    Description: InstanceID of the newly created RDS Instance
+    Value:  !Ref MyDB
+    Export: 
+      Name: !Sub ${EnvironmentName}-RDSID
