@@ -1,5 +1,5 @@
 aws cloudformation create-stack \
---stack-name $1 \
---template-body file://$2 \
---parameters file://$3 \
+--stack-name demoinfra \
+--template-body file://ourinfra.yml \
+--parameters file://ourinfra.json \
 --region=us-east-1
