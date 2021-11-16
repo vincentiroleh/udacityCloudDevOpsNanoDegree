@@ -94,7 +94,6 @@ Resources:
           echo "Udacity Demo Web Server Up and Running!" > index.html
       ImageId: !Ref AMItoUse
       IamInstanceProfile: !Ref ServerInstanceProfile
-      KeyName: Udagram
       SecurityGroups:
         - Ref: WebServerSecGroup
       InstanceType: t3.medium
